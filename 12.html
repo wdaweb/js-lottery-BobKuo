@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- 
+        作業
+        用上面練習完成的 function 製作威力彩號碼產生器
+        將隨機出的數字用 document.write() 顯示在網頁上
+        威力彩規則
+
+        A 區 1~38 取 6 個數字
+        B 區 1~8 取 1 個數字 
+    -->
+</head>
+
+<body>
+    <script>
+        // 取得範圍內的隨機數
+        const rand = (min, max) => {
+            let dif = max - min
+            return min + Math.round(dif * Math.random())
+        }
+
+        // 填入數字到陣列中
+        const loadNumbers = (min, max) => {
+            let numbers = []
+
+            for (let i = min; i <= max; i++) {
+                numbers.push(i)
+            }
+
+            return numbers
+        }
+
+
+
+        // 方法1
+        const getNumbers1 = (min, max, num) => {
+
+            let candidate = loadNumbers(min, max)
+            len = candidate.length
+
+            // 打亂陣列:
+            // 將陣列最後一個元素 與陣列的某個元素做交換
+            // 陣列長度－１
+            // 重複執行
+            while (len > 0) {
+
+                console.log(len, candidate)
+
+                let random_idx = Math.floor(Math.random() * len)
+
+                let last_idx = len - 1
+
+                let tmp = candidate[last_idx]
+                candidate[last_idx] = candidate[random_idx]
+                candidate[random_idx] = tmp
+
+                len--
+                //123456
+                //12645     3
+                //1254      6
+                //425       1
+                //52        4
+                //2         5
+
+                // final: 254163
+            }
+
+            return candidate.slice(0, num)
+        }
+
+        // 方法2
+        const getNumbers2 = (min, max, num) => {
+            // step1. 產生隨機數 1~38
+            // step2. 在陣列中尋找, 沒找到回 step1
+            // step3. 將隨機數加入陣列
+            // 重複 step1,2,3
+
+            let array = []
+            console.log(`=============== new array ===============`)
+
+            while (array.length < num) {
+                random_number = rand(1, 38)
+                console.log(`random_number = ${random_number}`)
+
+                if (!array.includes(random_number)) {
+                    array.push(random_number)
+                    console.log(`push, array = ${array}, len=${array.length}`)
+                }
+            }
+
+            return array
+        }
+
+        // 方法3: 符合取出後的機率
+        const getNumbers3 = (min, max, num) => {
+            // step1. 產生陣列 [1,2,...38]
+            // step2. 對現有陣列的大小產生隨機索引 0~37 => 0~36 => 0~35
+            // step3. 取出陣列中的元素
+            // 重複 step2,3
+
+            let array = []
+            console.log(`=============== new array ===============`)
+
+            for (let i = min; i <= max; i++)
+                array.push(i)
+
+            let new_array = []
+            for (let i = 0; i < num; i++) {
+                random_idx = rand(0, max - 1 - i)
+                new_array.push(array.splice(random_idx, 1))
+
+                console.log(`${i}, new = ${new_array}, array = ${array}`)
+            }
+
+            return new_array
+        }
+
+        document.write(`A區: ${getNumbers3(1, 38, 6)}<br>`)
+        document.write(`B區: ${getNumbers3(1, 8, 1)}`)
+
+    </script>
+
+
+</body>
+
+</html>
